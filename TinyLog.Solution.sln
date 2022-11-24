@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyLog.Core", "TinyLog.Core\TinyLog.Core.csproj", "{F313587F-B4F4-4BC9-B4B0-7419BCE946A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyLog.DAL", "TinyLog.DAL\TinyLog.DAL.csproj", "{7B950306-6CC2-4733-97C9-2E9CDAE86D07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyLog.Tests", "TinyLog.Tests\TinyLog.Tests.csproj", "{2453067C-5350-4E3D-983D-F035F4CC574E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyLog.DAL.Sqlite", "TinyLog.DAL.Sqlite\TinyLog.DAL.Sqlite.csproj", "{DD7F7AAC-DDFE-4FA0-887C-7C2103CFA58E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F313587F-B4F4-4BC9-B4B0-7419BCE946A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F313587F-B4F4-4BC9-B4B0-7419BCE946A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F313587F-B4F4-4BC9-B4B0-7419BCE946A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F313587F-B4F4-4BC9-B4B0-7419BCE946A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B950306-6CC2-4733-97C9-2E9CDAE86D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B950306-6CC2-4733-97C9-2E9CDAE86D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B950306-6CC2-4733-97C9-2E9CDAE86D07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B950306-6CC2-4733-97C9-2E9CDAE86D07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2453067C-5350-4E3D-983D-F035F4CC574E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2453067C-5350-4E3D-983D-F035F4CC574E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2453067C-5350-4E3D-983D-F035F4CC574E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2453067C-5350-4E3D-983D-F035F4CC574E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD7F7AAC-DDFE-4FA0-887C-7C2103CFA58E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD7F7AAC-DDFE-4FA0-887C-7C2103CFA58E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD7F7AAC-DDFE-4FA0-887C-7C2103CFA58E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD7F7AAC-DDFE-4FA0-887C-7C2103CFA58E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
