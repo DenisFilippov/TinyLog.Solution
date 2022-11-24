@@ -6,8 +6,8 @@ namespace TinyLog.DAL.Sqlite;
 
 public class BaseRepository
 {
-  private readonly string _connectionString;
   protected const string DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  private readonly string _connectionString;
 
   static BaseRepository()
   {

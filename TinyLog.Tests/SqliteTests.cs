@@ -7,11 +7,11 @@ namespace TinyLog.Tests;
 internal class SqliteTests
 {
   private string _connectionString;
-  private LogItemRepository _logItemRepository;
   private Item _item;
+  private LogItemRepository _logItemRepository;
 
   [SetUp]
-  public void Setup() 
+  public void Setup()
   {
     _connectionString = "Data Source=E:\\Projects\\Db\\DataGripProjects\\TinyLog.Sqlite\\tinyLog.db";
 
@@ -45,7 +45,7 @@ internal class SqliteTests
       )
       .Build();
   }
-  
+
   [Test]
   public void ClearTest()
   {
@@ -56,7 +56,7 @@ internal class SqliteTests
       .GetAwaiter()
       .GetResult();
   }
-  
+
   [Test]
   public void InsertTest1()
   {
