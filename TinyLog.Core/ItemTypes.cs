@@ -12,7 +12,7 @@ public enum ItemTypes : long
 
 public static class ItemTypesExt
 {
-  public static string ToString(this ItemTypes value)
+  public static string ToSpecifiedString(this ItemTypes value)
   {
     return value switch
     {

@@ -17,26 +17,18 @@ internal class SqliteTests
 
     _logItemRepository = new LogItemRepository(_connectionString);
 
-    _item = ItemBuilder.Create(1L, "11")
-      .AddMessage("message1")
+    _item = ItemBuilder.Create(1L, ItemTypes.Error, "message4")
       .AddApplication("application1")
-      .AddItemType(ItemTypes.Error)
       .AddParent(
-        ItemBuilder.Create(2L, "22")
-          .AddMessage("message2")
-          .AddItemType(ItemTypes.Error)
+        ItemBuilder.Create(2L, ItemTypes.Error, "message3")
           .AddTag("den", Encoding.UTF8.GetBytes("Hello, Den!!!"))
           .AddTag("maria", Encoding.UTF8.GetBytes("Hello, Maria!!!"))
           .AddData(10L)
           .AddParent(
-            ItemBuilder.Create(3L, "33")
-              .AddItemType(ItemTypes.Error)
-              .AddMessage("message3")
+            ItemBuilder.Create(3L, ItemTypes.Error, "message2")
               .AddData("Hello, world!!!")
               .AddParent(
-                ItemBuilder.Create(4L, "44")
-                  .AddItemType(ItemTypes.Error)
-                  .AddMessage("message4")
+                ItemBuilder.Create(4L, ItemTypes.Error, "message1")
                   .Build()
               )
               .Build()
@@ -63,6 +55,11 @@ internal class SqliteTests
     var source = new CancellationTokenSource();
 
     _logItemRepository
+      .ClearAsync(source.Token)
+      .GetAwaiter()
+      .GetResult();
+    
+    _logItemRepository
       .InsertAsync(_item, source.Token)
       .GetAwaiter()
       .GetResult();
@@ -72,6 +69,11 @@ internal class SqliteTests
   public void InsertTest2()
   {
     var source = new CancellationTokenSource();
+    
+    _logItemRepository
+      .ClearAsync(source.Token)
+      .GetAwaiter()
+      .GetResult();
 
     _logItemRepository
       .InsertAsync(new[] {_item, _item, _item}, source.Token)

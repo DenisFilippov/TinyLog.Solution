@@ -1,12 +1,10 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b0c68733_002D1c68_002D4e57_002D914d_002D15a647693dd2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from ItemTests.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Or&gt;&#xD;
-    &lt;ProjectFile&gt;2453067C-5350-4E3D-983D-F035F4CC574E/f:ItemTests.cs&lt;/ProjectFile&gt;&#xD;
-    &lt;TestAncestor&gt;&#xD;
-      &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.SqliteTests.InsertTest&lt;/TestId&gt;&#xD;
-      &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.SqliteTests.InsertTest1&lt;/TestId&gt;&#xD;
-      &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.SqliteTests.InsertTest2&lt;/TestId&gt;&#xD;
-      &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.SqliteTests.ClearTest&lt;/TestId&gt;&#xD;
-    &lt;/TestAncestor&gt;&#xD;
-  &lt;/Or&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a0a84a61_002D0b33_002D4b9f_002D9ba0_002D8f443a076c70/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="XmlSerializeTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.ItemTests.XmlSerializeTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.SqliteTests.ClearTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.SqliteTests.InsertTest1&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.SqliteTests.InsertTest2&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2453067C-5350-4E3D-983D-F035F4CC574E::net6.0::TinyLog.Tests.ClientTests.ErrorTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

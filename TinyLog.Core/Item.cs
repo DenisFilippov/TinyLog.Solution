@@ -1,56 +1,55 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace TinyLog.Core;
 
+// TODO : добавить пользовательскую сериализацию/десериализацию в Xml и JSON.
 [Serializable]
-public class Item : ISerializable
+public class Item
 {
+  private const string ITEM_TAG = "Item";
+  private const string ID_TAG = "Id";
+  private const string ITEM_TYPE_TAG = "ItemType";
+  private const string MESSAGE_TAG = "Message";
+  private const string MOMENT_TAG = "Moment";
+  private const string REQUEST_ID_TAG = "RequestId";
+  private const string WRITER_TAG = "Writer";
+  private const string APPLICATION_TAG = "Application";
+  private const string STACK_TRACE_TAG = "StackTrace";
+  private const string DATA_TAG = "Data";
+
   public Item()
   {
     Id = default;
     RequestId = string.Empty;
   }
 
-  [JsonConstructor]
-  public Item(long id, string requestId)
+  public Item(long id, ItemTypes itemType, string message, DateTime moment)
   {
     Id = id;
-    RequestId = requestId;
+    ItemType = itemType;
+    Message = message;
+    Moment = moment;
   }
-
-  public Item(SerializationInfo info, StreamingContext context)
+  
+  public Item(long id, ItemTypes itemType, string message)
+    :this(id, itemType, message, DateTime.Now)
   {
-    Id = (long) (info.GetValue(nameof(Id), typeof(long)) ??
-                 throw new InvalidOperationException($"Property {nameof(Id)} not found."));
-    Parent = (Item?) (info.GetValue(nameof(Parent), typeof(Item)) ?? null);
-    ItemType = (ItemTypes) (info.GetValue(nameof(ItemType), typeof(ItemTypes)) ??
-                            throw new InvalidOperationException($"Property {nameof(ItemType)} not found."));
-    Message = (string) (info.GetValue(nameof(Message), typeof(string)) ??
-                        throw new InvalidOperationException($"Property {nameof(Message)} not found."));
-    Moment = (DateTime) (info.GetValue(nameof(Moment), typeof(DateTime)) ??
-                         throw new InvalidOperationException($"Property {nameof(Moment)} not found."));
-    RequestId = (string) (info.GetValue(nameof(RequestId), typeof(string)) ??
-                          throw new InvalidOperationException($"Property {nameof(RequestId)} not found."));
-    Data = (byte[]?) info.GetValue(nameof(Data), typeof(byte[])) ?? null;
-    Tags = (IDictionary<string, byte[]>) (info.GetValue(nameof(Tags), typeof(IDictionary<string, byte[]>)) ??
-                                          new Dictionary<string, byte[]>());
-    Writer = (string) (info.GetValue(nameof(Writer), typeof(string)) ?? null)!;
-    Application = (string) (info.GetValue(nameof(Application), typeof(string)) ?? null)!;
-    StackTrace = (string) (info.GetValue(nameof(StackTrace), typeof(string)) ?? null)!;
   }
 
   public long Id { get; set; }
 
   public Item? Parent { get; set; }
 
-  public ItemTypes ItemType { get; set; } = ItemTypes.Info;
+  public ItemTypes ItemType { get; } = ItemTypes.Info;
 
-  public string Message { get; set; } = string.Empty;
+  public string Message { get; } = string.Empty;
 
-  public DateTime Moment { get; set; } = DateTime.Now;
+  public DateTime Moment { get; } = DateTime.Now;
 
-  public string RequestId { get; set; }
+  public string? RequestId { get; set; }
 
   public string? Writer { get; set; }
 
@@ -58,28 +57,65 @@ public class Item : ISerializable
 
   public string? StackTrace { get; set; }
 
-  public IDictionary<string, byte[]> Tags { get; } = new Dictionary<string, byte[]>();
+  public IDictionary<string, byte[]> Tags { get; } = new SerializableDictionary<string, byte[]>();
 
   public byte[]? Data { get; set; }
 
-  public void GetObjectData(SerializationInfo info, StreamingContext context)
+  public XmlSchema? GetSchema()
   {
-    info.AddValue(nameof(Id), Id, typeof(long));
-    if (Parent != null) info.AddValue(nameof(Parent), typeof(Item));
+    return null;
+  }
 
-    info.AddValue(nameof(ItemType), ItemType, typeof(ItemTypes));
-    info.AddValue(nameof(Message), Message, typeof(string));
-    info.AddValue(nameof(Moment), Moment, typeof(DateTime));
-    info.AddValue(nameof(RequestId), RequestId, typeof(string));
-    if (!string.IsNullOrEmpty(Writer)) info.AddValue(nameof(Writer), Writer, typeof(string));
+  public void ReadXml(XmlReader reader)
+  {
+  }
 
-    if (!string.IsNullOrEmpty(Application)) info.AddValue(nameof(Application), Application, typeof(string));
+  public void WriteXml(XmlWriter writer)
+  {
+    void WriteSingleItem(Item item, XmlWriter writer)
+    {
+      writer.WriteStartElement(ID_TAG);
+      writer.WriteValue(item.Id);
+      writer.WriteEndElement();
+      writer.WriteStartElement(ITEM_TYPE_TAG);
+      writer.WriteValue(item.ItemType.ToSpecifiedString());
+      writer.WriteEndElement();
+      writer.WriteStartElement(MESSAGE_TAG);
+      writer.WriteValue(item.Message);
+      writer.WriteEndElement();
+      writer.WriteStartElement(MOMENT_TAG);
+      writer.WriteValue(item.Moment);
+      writer.WriteEndElement();
+      writer.WriteStartElement(REQUEST_ID_TAG);
+      writer.WriteValue(item.RequestId);
+      writer.WriteEndElement();
+      writer.WriteStartElement(WRITER_TAG);
+      writer.WriteValue(item.Writer);
+      writer.WriteEndElement();
+      writer.WriteStartElement(APPLICATION_TAG);
+      writer.WriteValue(item.Application);
+      writer.WriteEndElement();
+      writer.WriteStartElement(STACK_TRACE_TAG);
+      writer.WriteValue(item.StackTrace);
+      writer.WriteEndElement();
+      writer.WriteStartElement(DATA_TAG);
+      new XmlSerializer(typeof(byte[])).Serialize(writer, item.Data);
+      writer.WriteEndElement();
+      (item.Tags as SerializableDictionary<string, byte[]>)?.WriteXml(writer);
+    }
+    
+    Item[] Flatten(Item item)
+    {
+      var result = new List<Item>();
+      result.Add(item);
+      while (item.Parent != null)
+      {
+        result.Add(item.Parent);
+        item = item.Parent;
+      }
 
-    if (!string.IsNullOrEmpty(StackTrace)) info.AddValue(nameof(StackTrace), StackTrace, typeof(string));
-
-    if (Data != null) info.AddValue(nameof(Data), Data, typeof(object));
-
-    if (Tags.Count > 0) info.AddValue(nameof(Tags), Tags, typeof(IDictionary<string, object>));
+      return result.ToArray().Reverse().ToArray();
+    }
   }
 
   public override string ToString()

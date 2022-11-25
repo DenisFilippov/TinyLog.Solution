@@ -7,9 +7,14 @@ public class ItemBuilder : IBuilder<Item>
 {
   private readonly Item _item;
 
-  private ItemBuilder(long id, string requestId)
+  private ItemBuilder(long id, ItemTypes itemType, string message, DateTime moment)
   {
-    _item = new Item(id, requestId);
+    _item = new Item(id, itemType, message, moment);
+  }
+  
+  private ItemBuilder(long id, ItemTypes itemType, string message)
+  {
+    _item = new Item(id, itemType, message);
   }
 
   public Item Build()
@@ -17,34 +22,19 @@ public class ItemBuilder : IBuilder<Item>
     return _item;
   }
 
-  public static ItemBuilder Create(long id, string requestId)
+  public static ItemBuilder Create(long id, ItemTypes itemType, string message, DateTime moment)
   {
-    return new ItemBuilder(id, requestId);
+    return new ItemBuilder(id, itemType, message, moment);
+  }
+  
+  public static ItemBuilder Create(long id, ItemTypes itemType, string message)
+  {
+    return new ItemBuilder(id, itemType, message);
   }
 
   public ItemBuilder AddParent(Item parent)
   {
     _item.Parent = parent;
-    return this;
-  }
-
-  public ItemBuilder AddItemType(ItemTypes itemType)
-  {
-    _item.ItemType = itemType;
-    return this;
-  }
-
-  public ItemBuilder AddMessage(string message)
-  {
-    if (string.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
-
-    _item.Message = message;
-    return this;
-  }
-
-  public ItemBuilder AddMoment(DateTime moment)
-  {
-    _item.Moment = moment;
     return this;
   }
 
@@ -119,27 +109,27 @@ public class ItemBuilder : IBuilder<Item>
     _item.Data = BitConverter.GetBytes(data);
     return this;
   }
-
-  public ItemBuilder AddWriter(string writer)
+  
+  public ItemBuilder AddRequestId(string? requestId)
   {
-    if (string.IsNullOrEmpty(writer)) throw new ArgumentNullException(nameof(writer));
+    _item.RequestId = requestId;
+    return this;
+  }
 
+  public ItemBuilder AddWriter(string? writer)
+  {
     _item.Writer = writer;
     return this;
   }
 
-  public ItemBuilder AddApplication(string application)
+  public ItemBuilder AddApplication(string? application)
   {
-    if (string.IsNullOrEmpty(application)) throw new ArgumentNullException(nameof(application));
-
     _item.Application = application;
     return this;
   }
 
-  public ItemBuilder AddStacktrace(string stacktrace)
+  public ItemBuilder AddStacktrace(string? stacktrace)
   {
-    if (string.IsNullOrEmpty(stacktrace)) throw new ArgumentNullException(nameof(stacktrace));
-
     _item.StackTrace = stacktrace;
     return this;
   }
