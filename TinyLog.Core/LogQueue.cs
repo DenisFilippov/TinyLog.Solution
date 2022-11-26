@@ -14,9 +14,9 @@ internal class LogQueue : ILogQueue
     _queue.Enqueue(item);
   }
 
-  public async Task PushAsync(Item item)
+  public async Task PushAsync(Item item, CancellationToken token)
   {
-    await Task.Factory.StartNew(() => { Push(item); });
+    await Task.Factory.StartNew(() => { Push(item); }, token);
   }
 
   public Item? Pop()
@@ -25,9 +25,9 @@ internal class LogQueue : ILogQueue
     return result ? item : null;
   }
 
-  public async Task<Item?> PopAsync()
+  public async Task<Item?> PopAsync(CancellationToken token)
   {
-    return await Task.Factory.StartNew(Pop);
+    return await Task.Factory.StartNew(() => { return Pop(); }, token);
   }
 
   public int Count => _queue.Count;

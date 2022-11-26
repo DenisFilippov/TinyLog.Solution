@@ -4,16 +4,18 @@ namespace TinyLog.Core;
 
 public static class LogContext
 {
-  private static ILogQueue _logQueue = new LogQueue();
-  
+  private static readonly ILogQueue _logQueue = new LogQueue();
+
+  public static int Count => _logQueue.Count;
+
   public static void Push(Item item)
   {
     _logQueue.Push(item);
   }
 
-  public static async Task PushAsync(Item item)
+  public static async Task PushAsync(Item item, CancellationToken token)
   {
-    await Task.Factory.StartNew(() => { Push(item); });
+    await _logQueue.PushAsync(item, token);
   }
 
   public static Item? Pop()
@@ -21,10 +23,8 @@ public static class LogContext
     return _logQueue.Pop();
   }
 
-  public static async Task<Item?> PopAsync()
+  public static async Task<Item?> PopAsync(CancellationToken token)
   {
-    return await Task.Factory.StartNew(Pop);
+    return await _logQueue.PopAsync(token);
   }
-
-  public static int Count => _logQueue.Count;
 }

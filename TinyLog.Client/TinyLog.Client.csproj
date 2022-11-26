@@ -7,7 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TinyLog.Core\TinyLog.Core.csproj" />
+        <ProjectReference Include="..\TinyLog.Core\TinyLog.Core.csproj"/>
+        <ProjectReference Include="..\TinyLog.DAL.Sqlite\TinyLog.DAL.Sqlite.csproj"/>
+        <ProjectReference Include="..\TinyLog.DAL\TinyLog.DAL.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -18,7 +18,7 @@ public class ItemTests
         .Create(10, ItemTypes.Error, "Parent message")
         .Build())
       .Build();
-    
+
     _item2 = ItemBuilder.Create(1L, ItemTypes.Info, "message1")
       .AddApplication("application1")
       .AddParent(

@@ -40,7 +40,7 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IX
       reader.ReadEndElement();
 
       reader.ReadEndElement();
-      this.Add(key, value);
+      Add(key, value);
     }
 
     reader.ReadEndElement();
@@ -67,6 +67,7 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IX
 
       writer.WriteEndElement();
     }
+
     writer.WriteEndElement();
   }
 }

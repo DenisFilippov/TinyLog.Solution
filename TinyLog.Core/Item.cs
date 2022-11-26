@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
@@ -33,9 +32,9 @@ public class Item
     Message = message;
     Moment = moment;
   }
-  
+
   public Item(long id, ItemTypes itemType, string message)
-    :this(id, itemType, message, DateTime.Now)
+    : this(id, itemType, message, DateTime.Now)
   {
   }
 
@@ -57,7 +56,7 @@ public class Item
 
   public string? StackTrace { get; set; }
 
-  public IDictionary<string, byte[]> Tags { get; } = new SerializableDictionary<string, byte[]>();
+  public IDictionary<string, byte[]?> Tags { get; } = new SerializableDictionary<string, byte[]?>();
 
   public byte[]? Data { get; set; }
 
@@ -103,7 +102,7 @@ public class Item
       writer.WriteEndElement();
       (item.Tags as SerializableDictionary<string, byte[]>)?.WriteXml(writer);
     }
-    
+
     Item[] Flatten(Item item)
     {
       var result = new List<Item>();

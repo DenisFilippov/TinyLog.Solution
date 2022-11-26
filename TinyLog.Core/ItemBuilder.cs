@@ -11,7 +11,7 @@ public class ItemBuilder : IBuilder<Item>
   {
     _item = new Item(id, itemType, message, moment);
   }
-  
+
   private ItemBuilder(long id, ItemTypes itemType, string message)
   {
     _item = new Item(id, itemType, message);
@@ -26,7 +26,7 @@ public class ItemBuilder : IBuilder<Item>
   {
     return new ItemBuilder(id, itemType, message, moment);
   }
-  
+
   public static ItemBuilder Create(long id, ItemTypes itemType, string message)
   {
     return new ItemBuilder(id, itemType, message);
@@ -38,7 +38,7 @@ public class ItemBuilder : IBuilder<Item>
     return this;
   }
 
-  public ItemBuilder AddData(byte[] data)
+  public ItemBuilder AddData(byte[]? data)
   {
     _item.Data = data;
     return this;
@@ -109,7 +109,7 @@ public class ItemBuilder : IBuilder<Item>
     _item.Data = BitConverter.GetBytes(data);
     return this;
   }
-  
+
   public ItemBuilder AddRequestId(string? requestId)
   {
     _item.RequestId = requestId;
@@ -134,9 +134,75 @@ public class ItemBuilder : IBuilder<Item>
     return this;
   }
 
-  public ItemBuilder AddTag(string key, byte[] value)
+  public ItemBuilder AddTag(string key, byte[]? value)
   {
     _item.Tags.Add(key, value);
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, string value)
+  {
+    _item.Tags.Add(key, Encoding.UTF8.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, int value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AAddTag(string key, long value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, bool value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, char value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, double value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, float value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, short value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, uint value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, ulong value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
+    return this;
+  }
+
+  public ItemBuilder AddTag(string key, ushort value)
+  {
+    _item.Tags.Add(key, BitConverter.GetBytes(value));
     return this;
   }
 }

@@ -1,108 +1,96 @@
-﻿using TinyLog.Core;
+﻿using System.Collections;
+using TinyLog.Core;
 
 namespace TinyLog.Client;
 
 public class LogClient
 {
+  public ItemTypes LogLevel { get; set; } = ItemTypes.Info;
+
   public void Trace(string message)
   {
-    if (!MustLog(ItemTypes.Trace)) return;
-    LogContext.Push(CreateItem(ItemTypes.Trace, message));
+    Process(ItemTypes.Trace, message);
   }
 
   public void Info(string message)
   {
-    if (!MustLog(ItemTypes.Info)) return;
-    LogContext.Push(CreateItem(ItemTypes.Info, message));
+    Process(ItemTypes.Info, message);
   }
 
   public void Hint(string message)
   {
-    if (!MustLog(ItemTypes.Hint)) return;
-    LogContext.Push(CreateItem(ItemTypes.Hint, message));
+    Process(ItemTypes.Hint, message);
   }
 
   public void Warning(string message)
   {
-    if (!MustLog(ItemTypes.Warning)) return;
-    LogContext.Push(CreateItem(ItemTypes.Warning, message));
+    Process(ItemTypes.Warning, message);
   }
 
   public void Error(string message)
   {
-    if (!MustLog(ItemTypes.Error)) return;
-    LogContext.Push(CreateItem(ItemTypes.Error, message));
+    Process(ItemTypes.Error, message);
   }
 
   public void Fatal(string message)
   {
-    if (!MustLog(ItemTypes.Fatal)) return;
-    LogContext.Push(CreateItem(ItemTypes.Fatal, message));
+    Process(ItemTypes.Fatal, message);
   }
 
   public void Error(Exception ex)
   {
-    if (!MustLog(ItemTypes.Error)) return;
-    LogContext.Push(CreateErrorItem(ex, ItemTypes.Error));
+    ErrorProcess(ItemTypes.Error, ex);
   }
 
   public void Fatal(Exception ex)
   {
-    if (!MustLog(ItemTypes.Fatal)) return;
-    LogContext.Push(CreateErrorItem(ex, ItemTypes.Fatal));
+    ErrorProcess(ItemTypes.Fatal, ex);
   }
-  
-  public async Task TraceAsync(string message)
+
+  public async Task TraceAsync(string message, CancellationToken token)
   {
-    if (!MustLog(ItemTypes.Trace)) return;
-    await LogContext.PushAsync(CreateItem(ItemTypes.Trace, message));
+    await ProcessAsync(ItemTypes.Trace, message, token);
   }
 
-  public async Task InfoAsync(string message)
+  public async Task InfoAsync(string message, CancellationToken token)
   {
-    if (!MustLog(ItemTypes.Info)) return;
-    await LogContext.PushAsync(CreateItem(ItemTypes.Info, message));
+    await ProcessAsync(ItemTypes.Info, message, token);
   }
 
-  public async Task HintAsync(string message)
+  public async Task HintAsync(string message, CancellationToken token)
   {
-    if (!MustLog(ItemTypes.Hint)) return;
-    await LogContext.PushAsync(CreateItem(ItemTypes.Hint, message));
+    await ProcessAsync(ItemTypes.Hint, message, token);
   }
 
-  public async Task WarningAsync(string message)
+  public async Task WarningAsync(string message, CancellationToken token)
   {
-    if (!MustLog(ItemTypes.Warning)) return;
-    await LogContext.PushAsync(CreateItem(ItemTypes.Warning, message));
+    await ProcessAsync(ItemTypes.Warning, message, token);
   }
 
-  public async Task ErrorAsync(string message)
+  public async Task ErrorAsync(string message, CancellationToken token)
   {
-    if (!MustLog(ItemTypes.Error)) return;
-    await LogContext.PushAsync(CreateItem(ItemTypes.Error, message));
+    await ProcessAsync(ItemTypes.Error, message, token);
   }
 
-  public async Task FatalAsync(string message)
+  public async Task FatalAsync(string message, CancellationToken token)
   {
-    if (!MustLog(ItemTypes.Fatal)) return;
-    await LogContext.PushAsync(CreateItem(ItemTypes.Fatal, message));
+    await ProcessAsync(ItemTypes.Fatal, message, token);
   }
 
-  public async Task ErrorAsync(Exception ex)
+  public async Task ErrorAsync(Exception ex, CancellationToken token)
   {
-    if (!MustLog(ItemTypes.Error)) return;
-    await LogContext.PushAsync(CreateErrorItem(ex, ItemTypes.Error));
+    await ErrorProcessAsync(ItemTypes.Error, ex, token);
   }
 
-  public async Task FatalAsync(Exception ex)
+  public async Task FatalAsync(Exception ex, CancellationToken token)
   {
-    if (!MustLog(ItemTypes.Fatal)) return;
-    await LogContext.PushAsync(CreateErrorItem(ex, ItemTypes.Fatal));
+    await ErrorProcessAsync(ItemTypes.Fatal, ex, token);
   }
 
-  public ItemTypes LogLevel { get; set; } = ItemTypes.Info;
-
-  private bool MustLog(ItemTypes itemType) => itemType >= LogLevel;
+  private bool MustLog(ItemTypes itemType)
+  {
+    return itemType >= LogLevel;
+  }
 
   private static Item CreateItem(ItemTypes itemType, string message)
   {
@@ -113,6 +101,13 @@ public class LogClient
 
   private static Item CreateErrorItem(Exception ex, ItemTypes itemType)
   {
+    void AddTag(Exception error, ItemBuilder builder)
+    {
+      if (error.Data.Count != 0)
+        foreach (DictionaryEntry entry in error.Data)
+          builder.AddTag((string) entry.Key, (byte[]?) entry.Value);
+    }
+
     var errors = new List<Exception>();
     errors.Add(ex);
     while (ex.InnerException != null)
@@ -128,27 +123,51 @@ public class LogClient
     Item result = null;
     Item current = null;
     foreach (var error in errorArray)
-    {
       if (result == null)
       {
-        result = ItemBuilder
+        var builder = ItemBuilder
           .Create(0L, itemType, error.Message, moment)
           .AddStacktrace(error.StackTrace)
-          .AddApplication(error.Source)
-          .Build();
+          .AddApplication(error.Source);
+        AddTag(error, builder);
+        result = builder.Build();
         current = result;
       }
       else
       {
-        current!.Parent = ItemBuilder
+        var builder = ItemBuilder
           .Create(0L, itemType, error.Message, moment)
           .AddStacktrace(error.StackTrace)
-          .AddApplication(error.Source)
-          .Build();
+          .AddApplication(error.Source);
+        AddTag(error, builder);
+        current!.Parent = builder.Build();
         current = current.Parent;
       }
-    }
 
     return result!;
+  }
+
+  private void Process(ItemTypes itemType, string message)
+  {
+    if (!MustLog(itemType)) return;
+    LogContext.Push(CreateItem(itemType, message));
+  }
+
+  private async Task ProcessAsync(ItemTypes itemType, string message, CancellationToken token)
+  {
+    if (!MustLog(itemType)) return;
+    await LogContext.PushAsync(CreateItem(itemType, message), token);
+  }
+
+  private void ErrorProcess(ItemTypes itemType, Exception ex)
+  {
+    if (!MustLog(itemType)) return;
+    LogContext.Push(CreateErrorItem(ex, itemType));
+  }
+
+  private async Task ErrorProcessAsync(ItemTypes itemType, Exception ex, CancellationToken token)
+  {
+    if (!MustLog(itemType)) return;
+    await LogContext.PushAsync(CreateErrorItem(ex, itemType), token);
   }
 }

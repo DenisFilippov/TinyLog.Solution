@@ -58,7 +58,7 @@ internal class SqliteTests
       .ClearAsync(source.Token)
       .GetAwaiter()
       .GetResult();
-    
+
     _logItemRepository
       .InsertAsync(_item, source.Token)
       .GetAwaiter()
@@ -69,7 +69,7 @@ internal class SqliteTests
   public void InsertTest2()
   {
     var source = new CancellationTokenSource();
-    
+
     _logItemRepository
       .ClearAsync(source.Token)
       .GetAwaiter()
