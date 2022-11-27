@@ -48,7 +48,8 @@ internal class ClientTests
   {
     using var cts = new CancellationTokenSource();
     var token = cts.Token;
-    token.Register(() => { Console.WriteLine("DONE"); });
+    cts.CancelAfter(5000);
+    token.Register(() => { Console.WriteLine("DONE1"); });
     LogManager.Initialize("E:\\Projects\\CSharp\\TinyLog.Solution\\TinyLog.Tests\\TLog.json");
     LogManager.Start(token);
 
@@ -57,6 +58,6 @@ internal class ClientTests
     _logClient.Warning("It`s a warning.");
 
     Thread.Sleep(20000);
-    Console.WriteLine("DONE");
+    Console.WriteLine("DONE2");
   }
 }
