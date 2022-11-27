@@ -1,0 +1,8 @@
+﻿{
+  "Target": "Database",
+  "Database": 
+  {
+    "ConnectionString": "Data Source=E:\\\\Projects\\\\Db\\\\DataGripProjects\\\\TinyLog.Sqlite\\\\tinyLog.db",
+    "Assembly": "TinyLog.DAL.Sqlite"
+  }
+}

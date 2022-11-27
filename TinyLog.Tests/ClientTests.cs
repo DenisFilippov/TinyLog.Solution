@@ -49,8 +49,7 @@ internal class ClientTests
     using var cts = new CancellationTokenSource();
     var token = cts.Token;
     token.Register(() => { Console.WriteLine("DONE"); });
-    LogManager.Initialize(LogTargets.Database,
-      "Data Source=E:\\Projects\\Db\\DataGripProjects\\TinyLog.Sqlite\\tinyLog.db");
+    LogManager.Initialize("E:\\Projects\\CSharp\\TinyLog.Solution\\TinyLog.Tests\\TLog.json");
     LogManager.Start(token);
 
     _logClient.Error(CreateException());
